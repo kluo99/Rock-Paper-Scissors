@@ -4,68 +4,79 @@ let computerSelection = '';
 let options = ['Rock', 'Paper', 'Scissors'];
         
 // Function created for the computer to make a random choice
-function computerplay(option) {
-    let randnumber = Math.floor(Math.random() * options.length);
-    computerSelection = option[randnumber];
-    return computerSelection
-    }
+function computerPlay() {
+    let choices = ['rock', 'paper', 'scissors']
+    return choices[Math.floor(Math.random() * choices.length)]
+}
 
+// Function created to end the game after someone reaches 5 points
+function disableButton() {
+    document.querySelectorAll('button').forEach(elem => {
+        elem.disabled = true;
+    })
+}
 
 // Player selection
 let score = 0;
 let opponentscore = 0;        
     
 
-
     // Function that plays a single round of Rock Paper Scissors
-function playRound() {
-    let playerSelection = prompt("Choose Rock, Paper or Scissors.");
+function playRound(decision) {
+    let result = '';
+    let computerSelection = computerPlay()
 
-        if (playerSelection.toUpperCase() == computerSelection.toUpperCase()) {
+        if (decision == computerSelection) {
             alert("It's a tie!");
-        } else if (playerSelection.toUpperCase() == 'PAPER' && computerSelection == 'Rock') {
-            alert("Player wins! Paper beats rock!");
-            score ++;
-        } else if (playerSelection.toUpperCase() == 'PAPER' && computerSelection == 'Scissors') {
-            alert("Computer wins! Scissors beats paper!");
-            opponentscore ++;
-        } else if (playerSelection.toUpperCase() == 'ROCK' && computerSelection == 'Scissors') {
-            alert("Player wins! Rock beats scissors!");
-            score ++;
-        } else if (playerSelection.toUpperCase() == 'ROCK' && computerSelection == 'Paper') {
-            alert("Computer wins! Paper beats rock!");
-            opponentscore ++;
-        } else if (playerSelection.toUpperCase() == 'SCISSORS' && computerSelection == 'Paper') {
-            alert("Player wins! Scissors beats paper!");
-            score ++;
-        } else if (playerSelection.toUpperCase() == 'SCISSORS' && computerSelection == 'Rock') {
-            alert("Computer wins! Rock beat scissors!");    
-            opponentscore ++;
-        } else {
-            alert("You need to enter a correct choice.");
-            }
-           alert('Your score is ' + score + ' and your opponent\'s score is ' + opponentscore + '.');
         
+        } else if ((decision == 'Paper' && computerSelection == 'rock') ||
+                  (decision == 'Scissors' && computerSelection == 'paper') ||
+                  (decision == 'Rock' && computerSelection == 'scissors')) {
+            score ++;
+            result = ('<br>Player chose ' + decision + ' and Computer chose ' + computerSelection +
+                 '! You win the round! <br><br>The score is ' + score + ' - ' + opponentscore );
+            if (score == 5) {
+                result = ('<br>CONGRATULATIONS THE PLAYER WINS!<br><br>Refresh to play again.')
+                disableButton()
+            }
+        } else {
+            opponentscore++;
+            result = ('<br>Player chose ' + decision + ' and Computer chose ' + computerSelection +
+            '! You lose the round! <br><br>The score is ' + score + ' - ' + opponentscore );
+            if (opponentscore == 5) {
+                result = ('<br>NICE TRY COMPUTER WINS!<br><br>Refresh to play again.')
+                disableButton()
+            }
+
         }
+    document.getElementById('result').innerHTML = result;
+}
+        
+                   
 
         //Function to play a 5 round game
                         
-function game() {
-    for (let i = 1; i < 5; i++) {
-        computerplay(options)
-        playRound()
-    }
-    if (opponentscore > score) {
-        alert('You lost to a computer!');
-    } else if (score > opponentscore) {
-        alert('YOU WON LET\'S GO!') 
-    } else {
-        alert('It was a tie.')
-    }
-}
+// function game() {
+//     for (let i = 1; i < 5; i++) {
+//         computerplay(options)
+//         playRound()
+//     }
+//     if (opponentscore > score) {
+//         alert('You lost to a computer!');
+//     } else if (score > opponentscore) {
+//         alert('YOU WON LET\'S GO!') 
+//     } else {
+//         alert('It was a tie.')
+//     }
+// }
 
 
-console.log(computerplay(options))
-console.log(playRound())
-console.log(game())
-        
+
+
+const buttons = document.querySelectorAll('button');
+buttons.forEach((button) => {
+    
+    button.addEventListener('click', function() {
+        playRound(button.id)
+    });
+  });
